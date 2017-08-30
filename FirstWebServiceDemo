@@ -1,0 +1,38 @@
+--Server--
+public interface WeatherImplements {
+	public String getWeather(String city);
+}
+@WebService
+public class WeatherImplementImpl implements WeatherImplements {
+
+	@Override
+	public String getWeather(String city) {
+		System.out.println("from client..."+city);
+		String weather="落雨";
+		System.out.println("to client..."+weather);
+		return weather;
+	}
+
+}
+public class weatherServer {
+
+	public static void main(String[] args) {
+		Endpoint.publish("http://127.0.0.1:11233/weather", new WeatherImplementImpl());
+		
+	}
+
+}
+--client--
+--wsimport -s . http://127.0.0.1:11233/weather?wsdl生成文件放到client客户端下
+public class WeatherClient {
+	public static void main(String[] args) {
+		//创建视图
+		WeatherImplementImplService weatherImplementImplService=new WeatherImplementImplService();
+		//得到服务点
+		WeatherImplementImpl weatherImplementImpl=weatherImplementImplService.getPort(WeatherImplementImpl.class);
+		String a=weatherImplementImpl.getWeather("北京");
+		System.out.println(a);
+	}
+}
+
+
